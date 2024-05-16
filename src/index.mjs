@@ -36,14 +36,18 @@ const client = new Client({
 })
 
 client.on("messageCreate", async (msg) => {
-  const oneUrl = msg.content.match(urlregex)
-  if (oneUrl) {
-    const parsedUrl = new URL(`https://${oneUrl[0]}`)
-    const redirectTo = redirects[parsedUrl.host]
-    if (redirectTo !== undefined) {
-      parsedUrl.host = redirectTo
-      await msg.reply(parsedUrl.toString())
+  try {
+    const oneUrl = msg.content.match(urlregex)
+    if (oneUrl) {
+      const parsedUrl = new URL(`https://${oneUrl[0]}`)
+      const redirectTo = redirects[parsedUrl.host]
+      if (redirectTo !== undefined) {
+        parsedUrl.host = redirectTo
+        await msg.reply(parsedUrl.toString())
+      }
     }
+  } catch (e) {
+    console.error(e)
   }
   // Do nothing.
 })
