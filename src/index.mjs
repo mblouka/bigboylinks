@@ -35,15 +35,41 @@ const client = new Client({
   ],
 })
 
+async function shouldFixLink(url) {
+  const twitterMatches = ["twitter.com", "t.co", "x.com"]
+  if (twitterMatches.find((h) => url.host.includes(h))) {
+    const prevHostName = url.host
+    url.host = "api.vxtwitter.com"
+
+    // Assuming json here.
+    const tweet = await (await fetch(url.toString())).json()
+    if (tweet.data.media_extended && tweet.data.media_extended.length > 0) {
+      for (const media of tweet.data.media_extended) {
+        if (media.type == "video" || media.type == "animated_gif") {
+          url.host = prevHostName
+          return true
+        }
+      }
+    }
+
+    // Is image or text, no need.
+    return false
+  }
+
+  return true
+}
+
 client.on("messageCreate", async (msg) => {
   try {
     const oneUrl = msg.content.match(urlregex)
     if (oneUrl) {
       const parsedUrl = new URL(`https://${oneUrl[0]}`)
-      const redirectTo = redirects[parsedUrl.host]
-      if (redirectTo !== undefined) {
-        parsedUrl.host = redirectTo
-        await msg.reply(parsedUrl.toString())
+      if (await shouldFixLink(parsedUrl)) {
+        const redirectTo = redirects[parsedUrl.host]
+        if (redirectTo !== undefined) {
+          parsedUrl.host = redirectTo
+          await msg.reply(parsedUrl.toString())
+        }
       }
     }
   } catch (e) {
