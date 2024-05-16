@@ -43,8 +43,8 @@ async function shouldFixLink(url) {
 
     // Assuming json here.
     const tweet = await (await fetch(url.toString())).json()
-    if (tweet.data.media_extended && tweet.data.media_extended.length > 0) {
-      for (const media of tweet.data.media_extended) {
+    if (tweet.media_extended && tweet.media_extended.length > 0) {
+      for (const media of tweet.media_extended) {
         if (media.type == "video" || media.type == "animated_gif") {
           url.host = prevHostName
           return true
@@ -68,6 +68,7 @@ client.on("messageCreate", async (msg) => {
         const redirectTo = redirects[parsedUrl.host]
         if (redirectTo !== undefined) {
           parsedUrl.host = redirectTo
+          await msg.suppressEmbeds(true)
           await msg.reply(parsedUrl.toString())
         }
       }
