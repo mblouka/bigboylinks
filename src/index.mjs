@@ -17,6 +17,8 @@ const redirects = {
   "www.twitter.com": "vxtwitter.com",
   "x.com": "fixvx.com",
   "www.x.com": "fixvx.com",
+  "reddit.com": "rxddit.com",
+  "www.reddit.com": "rxddit.com",
 }
 
 // connect
