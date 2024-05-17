@@ -65,6 +65,10 @@ async function shouldFixLink(url) {
 
 client.on("messageCreate", async (msg) => {
   try {
+    if (msg.content.includes("-preserve")) {
+      return
+    }
+
     const oneUrl = msg.content.match(urlregex)
     if (oneUrl) {
       const parsedUrl = new URL(`https://${oneUrl[0]}`)
