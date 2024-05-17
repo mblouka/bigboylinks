@@ -39,7 +39,7 @@ const client = new Client({
 
 async function shouldFixLink(url) {
   const twitterMatches = ["twitter.com", "x.com"]
-  if (twitterMatches.find((h) => url.host.includes(h))) {
+  if (twitterMatches.find((h) => url.host === h || `www.${url.host}` === h)) {
     const prevHostName = url.host
     url.host = "api.vxtwitter.com"
 
