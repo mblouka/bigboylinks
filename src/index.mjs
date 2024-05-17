@@ -15,8 +15,8 @@ const redirects = {
   "www.instagram.com": "www.ddinstagram.com",
   "twitter.com": "vxtwitter.com",
   "www.twitter.com": "vxtwitter.com",
-  "x.com": "fixvx.com",
-  "www.x.com": "fixvx.com",
+  "x.com": "vxtwitter.com",
+  "www.x.com": "vxtwitter.com",
   "reddit.com": "rxddit.com",
   "www.reddit.com": "rxddit.com",
 }
