@@ -38,27 +38,25 @@ const client = new Client({
 })
 
 async function shouldFixLink(url) {
-  try {
-    const twitterMatches = ["twitter.com", "t.co", "x.com"]
-    if (twitterMatches.find((h) => url.host.includes(h))) {
-      const prevHostName = url.host
-      url.host = "api.vxtwitter.com"
+  const twitterMatches = ["twitter.com", "x.com"]
+  if (twitterMatches.find((h) => url.host.includes(h))) {
+    const prevHostName = url.host
+    url.host = "api.vxtwitter.com"
 
-      // Assuming json here.
-      const tweet = await (await fetch(url.toString())).json()
-      if (tweet.media_extended && tweet.media_extended.length > 0) {
-        for (const media of tweet.media_extended) {
-          if (media.type == "video" || media.type == "animated_gif") {
-            url.host = prevHostName
-            return true
-          }
+    // Assuming json here.
+    const tweet = await (await fetch(url.toString())).json()
+    if (tweet.media_extended && tweet.media_extended.length > 0) {
+      for (const media of tweet.media_extended) {
+        if (media.type == "video" || media.type == "animated_gif") {
+          url.host = prevHostName
+          return true
         }
       }
-
-      // Is image or text, no need.
-      return false
     }
-  } catch {}
+
+    // Is image or text, no need.
+    return false
+  }
 
   return true
 }
