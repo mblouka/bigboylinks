@@ -49,7 +49,7 @@ async function shouldFixLink(url) {
     const tweet = await (await fetch(url.toString())).json()
     if (tweet.media_extended && tweet.media_extended.length > 0) {
       for (const media of tweet.media_extended) {
-        if (media.type == "video" || media.type == "animated_gif") {
+        if (media.type === "video" || media.type === "animated_gif") {
           url.host = prevHostName
           return true
         }
@@ -64,13 +64,15 @@ async function shouldFixLink(url) {
 }
 
 client.on("messageCreate", async (msg) => {
-  try {
-    if (msg.content.includes("-preserve")) {
-      return
-    }
+  if (msg.content.includes("-preserve")) {
+    return
+  }
 
-    const oneUrl = msg.content.match(urlregex)
-    if (oneUrl) {
+  const oneUrl = msg.content.match(urlregex)
+  if (oneUrl) {
+    console.log(`Processing "${oneUrl[0]}"`)
+
+    try {
       const parsedUrl = new URL(`https://${oneUrl[0]}`)
       if (await shouldFixLink(parsedUrl)) {
         const redirectTo = redirects[parsedUrl.host]
@@ -78,13 +80,15 @@ client.on("messageCreate", async (msg) => {
           parsedUrl.host = redirectTo
           await msg.suppressEmbeds(true)
           await msg.reply(parsedUrl.toString())
+          console.log(`Redirected to "${parsedUrl.toString()}"`)
         }
+      } else {
+        console.log(`No redirection needed for "${oneUrl[0]}"`)
       }
+    } catch (e) {
+      console.log(`Error processing "${oneUrl[0]}: ${e.message}"`)
     }
-  } catch (e) {
-    console.error(e)
   }
-  // Do nothing.
 })
 
 client.login(process.env.DISCORD_BOT_SECRET)
