@@ -68,6 +68,10 @@ client.on("messageCreate", async (msg) => {
     return
   }
 
+  if (msg.author.id === client.user.id) {
+    return // Don't process self-messages
+  }
+
   const oneUrl = msg.content.match(urlregex)
   if (oneUrl) {
     console.log(`Processing "${oneUrl[0]}"`)
