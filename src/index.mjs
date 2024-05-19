@@ -11,6 +11,7 @@ const urlregex =
 const redirects = {
   "tiktok.com": "tiktxk.com",
   "www.tiktok.com": "tiktxk.com",
+  "vm.tiktok.com": "vm.tiktokez.com",
   "instagram.com": "www.ddinstagram.com",
   "www.instagram.com": "www.ddinstagram.com",
   "twitter.com": "fxtwitter.com",
